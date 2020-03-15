@@ -11,24 +11,29 @@
 |
 */
 
- Route::get('/', function () {
+Route::get('/', function () {
     return view('/login');
 });
-Route::get ('password/lost','ForgotPasswordController@forgotPassword');
+Route::get('password/lost', 'ForgotPasswordController@forgotPassword');
 
 Auth::routes();
-Route::get ('dashboard', 'DashboardController@index');
-Route::get ('changepassword', 'UserController@changepassword');
-Route::post('updatepassword','UserController@updatePassword');
-Route::get ('profile', 'UserController@profile');
-Route::resource ('pages', 'PagesController');
-Route::resource ('moto', 'MotoController');
-Route::resource ('customer', 'CustomerController');
-Route::resource ('income', 'IncomeController');
-Route::post ('update/{user_id}', 'UserController@updateprofile');
-Route::post('changePassword/{user_id}','UserController@updatePassword')->name('changePassword');
-Route::get ('user/profile', 'UserController@profile');
-Route::get ('main/logout', 'MainController@logout');
+Route::get('dashboard', 'DashboardController@index');
+Route::get('changepassword', 'UserController@changepassword');
+Route::post('updatepassword', 'UserController@updatePassword');
+Route::get('profile', 'UserController@profile');
+Route::resource('pages', 'PagesController');
+Route::resource('moto', 'MotoController');
+Route::resource('customer', 'CustomerController');
+Route::resource('income', 'IncomeController');
+Route::resource('debt', 'DebtController');
+
+Route::post('update/{user_id}', 'UserController@updateprofile');
+Route::post('changePassword/{user_id}', 'UserController@updatePassword')->name('changePassword');
+Route::get('user/profile', 'UserController@profile');
+Route::get('main/logout', 'MainController@logout');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('debt/create', 'DebtController@create');
+Route::get('consultar', 'DebtController@listIncomes')->name('consultar');

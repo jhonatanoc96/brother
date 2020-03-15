@@ -79,8 +79,17 @@
     <!-- END: ecommerce/product-edit -->
     <!-- END: ecommerce/products-list -->
 
-    <!-- JS -->
-    <script src="<?php echo asset('/js/select.js'); ?>"></script>
-    <script src="<?php echo asset('/js/textarea.js'); ?>"></script>
-    
+    <!-- START: page scripts -->
+    <script>
+        // In your Javascript (external .js resource or <script> tag)
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.summernote').summernote();
+        });
+    </script>
+
     <?php echo $__env->make('components/footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -105,8 +105,6 @@
                                 </div>
                             </div>
                         </section>
-                        <!-- END: ecommerce/product-edit -->
-                        <!-- END: ecommerce/products-list -->
 
                     </div>
 

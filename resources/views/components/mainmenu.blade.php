@@ -51,6 +51,12 @@
                                 Ingresos
                             </a>
                         </li>
+                        <li class="cat__menu-left__item">
+                            <a href="{{ url('debt')}}">
+                                <span class="cat__menu-left__icon icmn-coin-dollar"></span>
+                                Deuda
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="cat__menu-left__item cat__menu-left__submenu">

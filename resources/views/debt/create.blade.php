@@ -77,8 +77,17 @@
     <!-- END: ecommerce/product-edit -->
     <!-- END: ecommerce/products-list -->
 
-    <!-- JS -->
-    <script src="{!! asset('/js/select.js') !!}"></script>
-    <script src="{!! asset('/js/textarea.js') !!}"></script>
-    
+    <!-- START: page scripts -->
+    <script>
+        // In your Javascript (external .js resource or <script> tag)
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.summernote').summernote();
+        });
+    </script>
+
     @include('components/footer')
