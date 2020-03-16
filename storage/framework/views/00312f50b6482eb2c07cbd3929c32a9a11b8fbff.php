@@ -17,13 +17,73 @@
                             <option value="<?php echo e($income->id); ?>"><?php echo e($income->created_at); ?> - $<?php echo e(number_format($income->amount)); ?></option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
-                        <!-- <button type="submit">Consultar</button> -->
                     </form>
                 </div>
                 <div class="col-lg-4">
                     <div class="dropdown pull-right">
-                        <a href="<?php echo e(url('debt/create')); ?>" class="btn btn-success "><i class="fa fa-plus"></i>&nbsp; &nbsp; Add Debt &nbsp; &nbsp;</a>
+
+                        <?php if(\Route::is('consultar')): ?>
+
+                        <?php $__currentLoopData = $incomeSelected; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $temp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalLong<?php echo e($temp->id); ?>">
+                            Add Debt
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong<?php echo e($temp->id); ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+
+                                    <?php echo Form::open(array('route' => 'debt.store','method'=>'POST')); ?>
+
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Descripción</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Descripción</label>
+                                                    <input class="form-control" placeholder="Descripción" name="description" placeholder="Descripción" value="<?php echo e(old('description')); ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Valor:</label>
+                                                    <input class="form-control" placeholder="Valor" name="amount" type="number" value="<?php echo e(old('amount')); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar cambios</button> </div>
+
+                                    <?php echo Form::close(); ?>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+
+                        <?php else: ?>
+                        <!-- No hacer nada -->
+                        <?php endif; ?>
+
                     </div>
+
+
+
+
                 </div>
             </div>
 
@@ -31,7 +91,7 @@
 
             <span class="cat__core__title">
                 <?php if(\Route::is('consultar')): ?>
-                <strong><?php $__currentLoopData = $incomeSelected; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $temp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>Debt List - Fecha: <?php echo e($temp->created_at); ?> - Valor: $<?php echo e(number_format($temp->amount)); ?> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></strong>
+                <strong>Debt List - Fecha: <?php echo e($incomeSelected[0]->created_at); ?> - Valor: $<?php echo e(number_format($incomeSelected[0]->amount)); ?></strong>
                 <?php else: ?>
                 <strong>Debt List</strong>
                 <?php endif; ?>
@@ -97,37 +157,6 @@
                             <button type="submit" class="btn btn-primary">
                                 Save
                             </button>
-                            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong<?php echo e($debt->id); ?>">
-                                <span class="icmn-eye"></span>
-                            </button> -->
-
-                            <!-- Modal -->
-                            <!-- <div class="modal fade" id="exampleModalLong<?php echo e($debt->id); ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <?php echo Form::model($debt, ['method' => 'PATCH', 'route' => ['debt.update', $debt->id]]); ?>
-
-
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Descripción</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn btn-primary">Guardar cambios</button> </div>
-
-                                        <?php echo Form::close(); ?>
-
-
-                                    </div>
-                                </div>
-                            </div> -->
 
                             <?php echo Form::close(); ?>
 

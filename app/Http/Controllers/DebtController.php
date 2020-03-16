@@ -7,11 +7,11 @@ use App\Customer;
 use App\Debt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-
+use Session;
 
 class DebtController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -52,9 +52,10 @@ class DebtController extends Controller
      */
     public function create()
     {
-        $customers = Customer::all();
+        // Ingreso seleccionado en deudas
+        // $incomeSelected =  DB::table('incomes')->where('id', $request->income)->get();
 
-        return view('income/create', compact('customers'));
+        return view('income/create');
     }
 
     /**
@@ -65,11 +66,16 @@ class DebtController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'description' => 'required',
-            'customer_id' => 'required',
-            'amount' => 'required',
-        ]);
+        // $this->validate($request, [
+        //     'description' => 'required',
+        //     'customer_id' => 'required',
+        //     'amount' => 'required',
+        // ]);
+
+        // Recibir variable de sesión desde ConsultarIncome
+        $incomeSelected = \Session::get('incomeSelected');
+
+        $request['income_id'] = $incomeSelected[0]->id;
 
         if ($request['active']) {
             $request['active'] = 1;
@@ -77,10 +83,10 @@ class DebtController extends Controller
             $request['active'] = 0;
         }
 
-        $request['amountAvailable'] = $request->amount;
-        Income::create($request->all());
-        return redirect()->route('income.index')
-            ->with('success', 'Income created successfully');
+
+        Debt::create($request->all());
+        return redirect()->back()
+            ->with('success', 'Debt created successfully');
     }
 
     /**
@@ -150,14 +156,18 @@ class DebtController extends Controller
             ->with('success', 'Debt deleted successfully');
     }
 
-    public function listIncomes(Request $request){
+    public function listIncomes(Request $request)
+    {
         // dd($request->income);
         $debts = DB::table('debts')->where('income_id', $request->income)->get();
         $incomes = Income::all();
 
         // Ingreso seleccionado en deudas
         $incomeSelected =  DB::table('incomes')->where('id', $request->income)->get();
-              
+
+        // Declarar variable de sesión que durará otro request
+        Session::flash('incomeSelected', $incomeSelected);
+
         return view('debt.index', [
             'debts' => $debts,
             'incomes' => $incomes,
