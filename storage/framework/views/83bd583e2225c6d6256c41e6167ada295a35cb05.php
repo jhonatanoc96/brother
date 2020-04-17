@@ -51,11 +51,26 @@
                                 Ingresos
                             </a>
                         </li>
-                        <li class="cat__menu-left__item">
-                            <a href="<?php echo e(url('debt')); ?>">
+                        <li class="cat__menu-left__item cat__menu-left__submenu">
+                            <a href="javascript: void(0);">
+
                                 <span class="cat__menu-left__icon icmn-coin-dollar"></span>
-                                Deuda
+                                Gastos
                             </a>
+                            <ul class="cat__menu-left__list">
+                                <li class="cat__menu-left__item">
+                                    <a href="<?php echo e(url('debt')); ?>">
+                                        <span class="cat__menu-left__icon icmn-file-text2"></span>
+                                        Control de gastos
+                                    </a>
+                                </li>
+                                <li class="cat__menu-left__item">
+                                    <a href="<?php echo e(url('debt_temp')); ?>">
+                                        <span class="cat__menu-left__icon icmn-bubble"></span>
+                                        Valores iniciales
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>

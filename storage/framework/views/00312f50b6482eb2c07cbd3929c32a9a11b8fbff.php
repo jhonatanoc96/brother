@@ -26,10 +26,13 @@
 
                         <?php $__currentLoopData = $incomeSelected; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $temp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalLong<?php echo e($temp->id); ?>">
-                            Add Debt
+                            Añadir individual
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalLong2<?php echo e($temp->id); ?>">
+                            Añadir varios
                         </button>
 
-                        <!-- Modal -->
+                        <!-- Modal para añadir un único registro-->
                         <div class="modal fade" id="exampleModalLong<?php echo e($temp->id); ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -72,6 +75,85 @@
                             </div>
                         </div>
 
+                        <!-- Modal para añadir varios registros-->
+                        <div class="modal fade" id="exampleModalLong2<?php echo e($temp->id); ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Descripción</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <table class="table table-hover nowrap" id="debtsTable" width="100%">
+                                        <thead class="thead-default">
+                                            <tr>
+                                                <th>Descripción</th>
+                                                <th>Valor</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $__currentLoopData = $debts_temp; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $debt_temp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <tr>
+                                                <?php echo Form::model($debt_temp, ['method' => 'PATCH', 'id'=>$debt_temp->id, 'route' => ['debt_temp.update', $debt_temp->id]]); ?>
+
+                                                <td><input class="form-control" name="description" type="text" value="<?php echo e($debt_temp->description); ?>"></td>
+                                                <td><input class="form-control" name="amount" type="number" value="<?php echo e($debt_temp->amount); ?>"></td>
+                                                <td style="width:250px;">
+                                                    <!-- Button trigger modal -->
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Save
+                                                    </button>
+
+                                                    <?php echo Form::close(); ?>
+
+
+
+                                                    <?php echo Form::open(['method' => 'DELETE','route' => ['debt_temp.destroy', $debt_temp->id],'style'=>'display:inline','role'=>'form','onsubmit' => 'return confirm("Do you want to delete this ?")']); ?>
+
+                                                    <?php echo Form::submit('Remove', ['class' => 'btn btn-danger']); ?>
+
+                                                    <?php echo Form::close(); ?>
+
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </tbody>
+                                    </table>
+
+                                    <button id="addRows">add</button>
+
+
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Descripción</label>
+                                                    <input class="form-control" placeholder="Descripción" name="description" placeholder="Descripción" value="<?php echo e(old('description')); ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Valor:</label>
+                                                    <input class="form-control" placeholder="Valor" name="amount" type="number" value="<?php echo e(old('amount')); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar cambios</button> </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 
@@ -91,7 +173,7 @@
 
             <span class="cat__core__title">
                 <?php if(\Route::is('consultar')): ?>
-                <strong>Debt List - Fecha: <?php echo e($incomeSelected[0]->created_at); ?> - Valor: $<?php echo e(number_format($incomeSelected[0]->amount)); ?></strong>
+                <strong>Debt List - Concepto: <?php echo e($income->description); ?> - Valor: $<?php echo e(number_format($incomeSelected[0]->amount)); ?> - Fecha: <?php echo e($incomeSelected[0]->created_at); ?></strong>
                 <?php else: ?>
                 <strong>Debt List</strong>
                 <?php endif; ?>
@@ -186,5 +268,23 @@
     <!-- JS -->
     <script src="<?php echo asset('/js/datatable.js'); ?>"></script>
     <script src="<?php echo asset('/js/select.js'); ?>"></script>
+
+    <!-- Script para ingresar varios registros en la tabla de deudas -->
+    <script>
+        var table = $('#debtsTable').DataTable();
+
+
+        $('#addRows').on('click', function() {
+            table.rows.add(
+                [
+                    ["Tiger Nixon", 3120],
+                    ["Nixon Tiger", 1230]
+                ]
+            ).draw();
+        });
+
+
+        // $('#addRows').click();
+    </script>
 
     <?php echo $__env->make('components/footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

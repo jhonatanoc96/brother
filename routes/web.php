@@ -26,6 +26,7 @@ Route::resource('moto', 'MotoController');
 Route::resource('customer', 'CustomerController');
 Route::resource('income', 'IncomeController');
 Route::resource('debt', 'DebtController');
+Route::resource('debt_temp', 'DebttempController');
 
 Route::post('update/{user_id}', 'UserController@updateprofile');
 Route::post('changePassword/{user_id}', 'UserController@updatePassword')->name('changePassword');

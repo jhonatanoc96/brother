@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Income;
 use App\Customer;
-use App\Debt;
 use App\Debttemp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
 
-class DebtController extends Controller
+class DebttempController extends Controller
 {
 
     /**
@@ -27,25 +26,11 @@ class DebtController extends Controller
     public function index(Request $request)
     {
         //
-        $debts = DB::table('debts')->where('income_id', '0')->get(); //No mostrar ningún registro
-        $incomes = Income::all();
         $debts_temp = DB::table('debts_temp')->get();
-        $incomeSelected = '';
 
-
-        return view('debt.index', [
-            'debts' => $debts,
-            'incomes' => $incomes,
-            'incomeSelected' => $incomeSelected,
-            'debts_temp' => $debts_temp
+        return view('debt_temp.index', [
+            'debts_temp' => $debts_temp,
         ]);
-    }
-
-
-    public function showpages()
-    {
-        //
-        return view('income/create');
     }
 
     /**
@@ -55,10 +40,6 @@ class DebtController extends Controller
      */
     public function create()
     {
-        // Ingreso seleccionado en deudas
-        // $incomeSelected =  DB::table('incomes')->where('id', $request->income)->get();
-
-        return view('income/create');
     }
 
     /**
@@ -75,11 +56,6 @@ class DebtController extends Controller
         //     'amount' => 'required',
         // ]);
 
-        // Recibir variable de sesión desde ConsultarIncome
-        $incomeSelected = \Session::get('incomeSelected');
-
-        $request['income_id'] = $incomeSelected[0]->id;
-
         if ($request['active']) {
             $request['active'] = 1;
         } else {
@@ -87,7 +63,7 @@ class DebtController extends Controller
         }
 
 
-        Debt::create($request->all());
+        Debttemp::create($request->all());
         return redirect()->back()
             ->with('success', 'Debt created successfully');
     }
@@ -98,7 +74,7 @@ class DebtController extends Controller
      * @param  \App\Pages  $pages
      * @return \Illuminate\Http\Response
      */
-    public function show(Income $income)
+    public function show()
     {
         //
     }
@@ -111,11 +87,7 @@ class DebtController extends Controller
      */
     public function edit($id)
     {
-        $income = Income::find($id);
-        //$customers = Customer::all();
-        $customers = Customer::all();
-
-        return view('income.edit', compact('income', 'customers'));
+        
     }
 
     /**
@@ -139,7 +111,7 @@ class DebtController extends Controller
             $request['active'] = 0;
         }
 
-        Debt::find($id)->update($request->all());
+        Debttemp::find($id)->update($request->all());
 
 
         // Redireccionar a la misma página donde se encuentra
@@ -154,30 +126,10 @@ class DebtController extends Controller
      */
     public function destroy($id)
     {
-        Debt::find($id)->delete();
+        Debttemp::find($id)->delete();
         return redirect()->back()
-            ->with('success', 'Debt deleted successfully');
+            ->with('success', 'Debt_temp deleted successfully');
     }
 
-    public function listIncomes(Request $request)
-    {
-        // dd($request->income);
-        $debts = DB::table('debts')->where('income_id', $request->income)->get();
-        $incomes = Income::all();
-        $debts_temp = DB::table('debts_temp')->get();
 
-        // Ingreso seleccionado en deudas
-        $incomeSelected =  DB::table('incomes')->where('id', $request->income)->get();
-
-        // Declarar variable de sesión que durará otro request
-        Session::flash('incomeSelected', $incomeSelected);
-
-        return view('debt.index', [
-            'debts' => $debts,
-            'incomes' => $incomes,
-            'incomeSelected' => $incomeSelected,
-            'debts_temp' => $debts_temp
-
-        ]);
-    }
 }
