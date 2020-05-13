@@ -87,7 +87,6 @@ class DebttempController extends Controller
      */
     public function edit($id)
     {
-        
     }
 
     /**
@@ -127,9 +126,7 @@ class DebttempController extends Controller
     public function destroy($id)
     {
         Debttemp::find($id)->delete();
-        return redirect()->back()
-            ->with('success', 'Debt_temp deleted successfully');
+        // return redirect()->back()
+        //     ->with('success', 'Debt_temp deleted successfully');
     }
-
-
 }

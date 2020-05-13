@@ -111,10 +111,10 @@
                                                     <?php echo Form::close(); ?>
 
 
+                                                    <?php echo Form::open(['class' => 'deleteDebtTemp', 'method' => 'DELETE','action' => ['DebttempController@destroy', $debt_temp->id],'style'=>'display:inline','role'=>'form','onsubmit' => 'return confirm("Do you want to delete this ?")']); ?>
 
-                                                    <?php echo Form::open(['method' => 'DELETE','route' => ['debt_temp.destroy', $debt_temp->id],'style'=>'display:inline','role'=>'form','onsubmit' => 'return confirm("Do you want to delete this ?")']); ?>
-
-                                                    <?php echo Form::submit('Remove', ['class' => 'btn btn-danger']); ?>
+                                                    <?php echo Form::submit('Remove', ['class' => 'submitDelete btn btn-danger',
+                                                    'data-id' => $debt_temp->id ]); ?>
 
                                                     <?php echo Form::close(); ?>
 
@@ -124,31 +124,42 @@
                                         </tbody>
                                     </table>
 
-                                    <button id="addRows">add</button>
+                                    <!-- Agregar un registro de debttemp -->
+                                    <form action="<?php echo e(route('agregar_registro')); ?>" id="addDebtTemp" method="POST">
+                                        <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
 
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">Descripción</label>
+                                                        <input class="form-control" id="amountDebt" placeholder="Descripción" name="description" placeholder="Descripción" value="<?php echo e(old('description')); ?>">
+                                                    </div>
+                                                </div>
 
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="form-control-label">Descripción</label>
-                                                    <input class="form-control" placeholder="Descripción" name="description" placeholder="Descripción" value="<?php echo e(old('description')); ?>">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">Valor:</label>
+                                                        <input class="form-control" id="descriptionDebt" placeholder="Valor" name="amount" type="number" value="<?php echo e(old('amount')); ?>">
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="form-control-label">Valor:</label>
-                                                    <input class="form-control" placeholder="Valor" name="amount" type="number" value="<?php echo e(old('amount')); ?>">
-                                                </div>
-                                            </div>
+                                            <button type="submit" id="submit" class="submit btn btn-primary">
+                                                Save
+                                            </button>
+
                                         </div>
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary">Guardar cambios</button> </div>
+                                    </form>
 
+                                    <!-- Agregar todos los registros de debttemp a debts. -->
+                                    <form action="<?php echo e(route('agregar_todos')); ?>">
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                        </div>
+                                    </form>
 
                                 </div>
                             </div>
@@ -269,22 +280,61 @@
     <script src="<?php echo asset('/js/datatable.js'); ?>"></script>
     <script src="<?php echo asset('/js/select.js'); ?>"></script>
 
-    <!-- Script para ingresar varios registros en la tabla de deudas -->
+    <!-- Ajax para ingresar registros en la tabla de debts_temp -->
     <script>
-        var table = $('#debtsTable').DataTable();
+        $(document).ready(function() {
+            $(".submit").click('#submit', function(e) {
+                e.preventDefault();
+                var description = document.getElementById('descriptionDebt').value;
+                var amount = document.getElementById('amountDebt').value;
 
+                if (description == "") {
+                    alert('Description is Required');
+                } else if (amount == "") {
+                    alert('Amount is Required');
+                } else {
+                    $.ajax({
+                        url: "<?php echo e(route('agregar_registro')); ?>",
+                        type: 'POST',
+                        data: $('#addDebtTemp').serialize(),
+                        success: function(msg) {
+                            // limpiar el formulario
+                            $("#addDebtTemp")[0].reset();
+                            // Refrescar el datatable sin actualizar la página
+                            $("#debtsTable").load(location.href + " #debtsTable");
 
-        $('#addRows').on('click', function() {
-            table.rows.add(
-                [
-                    ["Tiger Nixon", 3120],
-                    ["Nixon Tiger", 1230]
-                ]
-            ).draw();
+                        }
+                    });
+                }
+            });
         });
+    </script>
 
+    <!-- Script para eliminar registros de la tabla de debts_temp -->
+    <script>
+        $(document).ready(function() {
+            $('.submitDelete').on('click', function(e) {
+                e.preventDefault();
+                var dataId = $('.submitDelete').attr('data-id');
 
-        // $('#addRows').click();
+                $.ajax({
+                    url: "<?php echo e(url('eliminar_registro' )); ?>" + '/' + dataId,
+                    type: 'DELETE',
+                    data: $('.deleteDebtTemp').serialize(),
+
+                    success: function(msg) {
+                        $("#debtsTable").load(location.href + " #debtsTable");
+                    },
+
+                    error: function(data) {
+                        if (data.status === 422) {
+                            alert('error');
+                            toastr.error('Cannot delete the debt');
+                        }
+                    }
+                });
+            });
+        });
     </script>
 
     <?php echo $__env->make('components/footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

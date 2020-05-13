@@ -36,5 +36,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+// DEBTS
 Route::get('debt/create', 'DebtController@create');
-Route::get('consultar', 'DebtController@listIncomes')->name('consultar');
+Route::get('consultar', 'DebtController@listIncomes')->name('consultar'); 
+Route::post('agregar_registro', 'DebtController@addDebtTemp')->name('agregar_registro'); //Agregar registro de debt temp
+Route::delete('eliminar_registro/{id}', 'DebttempController@destroy')->name('eliminar_registro'); //Agregar registro de debt temp
+Route::get('agregar_todos', 'DebtController@addAll')->name('agregar_todos'); //Agregar todos los registros.

@@ -180,4 +180,62 @@ class DebtController extends Controller
 
         ]);
     }
+
+    public function addDebtTemp(Request $request)
+    {
+        // $this->validate($request, [
+        //     'description' => 'required',
+        //     'customer_id' => 'required',
+        //     'amount' => 'required',
+        // ]);
+
+        $request['description'] = $request->description;
+        $request['amount'] = $request->amount;
+
+        if ($request['active']) {
+            $request['active'] = 1;
+        } else {
+            $request['active'] = 0;
+        }
+
+        Debttemp::create($request->all());
+        // return redirect()->back()
+        //     ->with('success', 'Debt created successfully');
+    }
+
+    public function addAll(Request $request)
+    {
+        // $this->validate($request, [
+        //     'description' => 'required',
+        //     'customer_id' => 'required',
+        //     'amount' => 'required',
+        // ]);
+
+        //Obtener toda la lista de DebtsTemp
+        $debts_temp = Debttemp::all();
+
+        // Recibir variable de sesión desde ConsultarIncome
+        $incomeSelected = \Session::get('incomeSelected');
+        $request['income_id'] = $incomeSelected[0]->id;
+
+        // dd($debts_temp);
+        // die();
+
+        foreach ($debts_temp as $temp) {
+            if ($request['active']) {
+                $request['active'] = 1;
+            } else {
+                $request['active'] = 0;
+            }
+
+            $request['description'] = $temp->description;
+            $request['amount'] = $temp->amount;
+
+            Debt::create($request->all());
+        }
+
+
+        return redirect()->back()
+            ->with('success', 'Debt created successfully');
+    }
 }
