@@ -159,6 +159,14 @@ class DebtController extends Controller
             ->with('success', 'Debt deleted successfully');
     }
 
+    public function destroyDebtTemp($id)
+    {
+        Debttemp::find($id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Debt deleted successfully');
+    }
+
     public function listIncomes(Request $request)
     {
         // dd($request->income);

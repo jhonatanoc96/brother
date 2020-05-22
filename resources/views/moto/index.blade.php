@@ -96,10 +96,9 @@
 
     </section>
 
-    <script>
-        $(document).ready(function() {
-            $('.summernote').summernote();
-        });
-    </script>
+    <!-- JS -->
+    <script src="{!! asset('/js/datatable.js') !!}"></script>
+    <script src="{!! asset('/js/textarea.js') !!}"></script>
+    <script src="{!! asset('/js/select.js') !!}"></script>
 
     @include('components/footer')

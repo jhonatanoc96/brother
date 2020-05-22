@@ -107,10 +107,14 @@
 
                                                     {!! Form::close() !!}
 
-                                                    {!! Form::open(['class' => 'deleteDebtTemp', 'method' => 'DELETE','route' => ['debt_temp.destroy', $debt_temp->id],'style'=>'display:inline','role'=>'form','onsubmit' => 'return confirm("Do you want to delete this ?")']) !!}
-                                                    {!! Form::submit('Remove', ['class' => 'submitDelete btn btn-danger',
-                                                    'data-id' => $debt_temp->id ]) !!}
-                                                    {!! Form::close() !!}
+                                                    <!-- {!! Form::open(['class' => 'deleteDebtTemp', 'method' => 'DELETE','action' => ['DebtController@destroyDebtTemp', $debt_temp->id],'style'=>'display:inline','role'=>'form','onsubmit' => 'return confirm("Do you want to delete this ?")']) !!} -->
+                                                    <form id="deleteDebt{{$debt_temp->id}}" action="{{ route('eliminar_registro',[$debt_temp->id])}}" class="deleteDebtTemp" method="POST" style="display:inline">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                        <!-- {!! Form::submit('Remove', ['class' => 'submitDelete btn btn-danger',
+                                                        'data-id' => $debt_temp->id ]) !!} -->
+                                                        <button type="submit" class="submitDelete btn btn-danger" data-id="{{$debt_temp->id}}" data-token="{{ csrf_token() }}">Confirm</button>
+                                                        <!-- {!! Form::close() !!} -->
+                                                    </form>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -251,11 +255,6 @@
                 </tbody>
             </table>
 
-
-
-
-
-
         </div>
 
     </section>
@@ -263,6 +262,34 @@
     <!-- JS -->
     <script src="{!! asset('/js/datatable.js') !!}"></script>
     <script src="{!! asset('/js/select.js') !!}"></script>
+
+    <!-- Script para eliminar registros de la tabla de debts_temp -->
+    <script>
+        $(document).ready(function() {
+            $('.submitDelete').on('click', function(e) {
+                e.preventDefault();
+                var dataId = $('.submitDelete').attr('data-id');
+
+                $.ajax({
+                    url: "{{url('eliminar_registro' )}}" + '/' + dataId,
+                    type: 'POST',
+                    data: $('#deleteDebt' + dataId).serialize(),
+
+                    success: function(msg) {
+                        $("#debtsTable").load(location.href + " #debtsTable");
+                    },
+
+                    error: function(data) {
+                        if (data.status === 422) {
+                            alert('error');
+                            toastr.error('Cannot delete the debt');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
 
     <!-- Ajax para ingresar registros en la tabla de debts_temp -->
     <script>
@@ -294,31 +321,5 @@
         });
     </script>
 
-    <!-- Script para eliminar registros de la tabla de debts_temp -->
-    <script>
-        $(document).ready(function() {
-            $('.submitDelete').on('click', function(e) {
-                e.preventDefault();
-                var dataId = $('.submitDelete').attr('data-id');
-
-                $.ajax({
-                    url: "{{url('eliminar_registro' )}}" + '/' + dataId,
-                    type: 'DELETE',
-                    data: $('.deleteDebtTemp').serialize(),
-
-                    success: function(msg) {
-                        $("#debtsTable").load(location.href + " #debtsTable");
-                    },
-
-                    error: function(data) {
-                        if (data.status === 422) {
-                            alert('error');
-                            toastr.error('Cannot delete the debt');
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 
     @include('components/footer')

@@ -11,10 +11,13 @@
 |
 */
 
+
 Route::get('/', function () {
-    return view('/login');
+    return view('/auth/login');
 });
+
 Route::get('password/lost', 'ForgotPasswordController@forgotPassword');
+Route::post('password/lost', 'ForgotPasswordController@forgotPassword');
 
 Auth::routes();
 Route::get('dashboard', 'DashboardController@index');
@@ -32,13 +35,11 @@ Route::post('update/{user_id}', 'UserController@updateprofile');
 Route::post('changePassword/{user_id}', 'UserController@updatePassword')->name('changePassword');
 Route::get('user/profile', 'UserController@profile');
 Route::get('main/logout', 'MainController@logout');
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 // DEBTS
 Route::get('debt/create', 'DebtController@create');
 Route::get('consultar', 'DebtController@listIncomes')->name('consultar'); 
 Route::post('agregar_registro', 'DebtController@addDebtTemp')->name('agregar_registro'); //Agregar registro de debt temp
-Route::delete('eliminar_registro/{id}', 'DebttempController@destroy')->name('eliminar_registro'); //Agregar registro de debt temp
+Route::post('eliminar_registro/{id}', 'DebtController@destroyDebtTemp')->name('eliminar_registro'); //Eliminar registro de debt temp
+// Route::delete('eliminar_registro/{id}', 'DebttempController@destroy')->name('eliminar_registro'); //Agregar registro de debt temp
 Route::get('agregar_todos', 'DebtController@addAll')->name('agregar_todos'); //Agregar todos los registros.

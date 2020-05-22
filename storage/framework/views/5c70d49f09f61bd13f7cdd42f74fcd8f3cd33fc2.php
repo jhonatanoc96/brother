@@ -9,17 +9,17 @@
             <div class="col-xl-12">
                 <div class="cat__pages__login__block__promo text-white text-center">
                     <h2 class="mb-">
-                        <strong>WELCOME TO EZEELIVE TECHNOLOGIES - ADMIN PANEL</strong>
+                        <strong>BIENVENIDO - BROTHER</strong>
                     </h2>
                 </div>
                 <div class="cat__pages__login__block__inner">
                     <div class="cat__pages__login__block__form">
                         <h4 class="text-uppercase">
-                            <strong>Please log in</strong>
+                            <strong>INICIAR SESIÓN</strong>
                         </h4>
                         <br />
 						<?php if(isset(Auth::user()->email)): ?>
-							<script>window.location="/main/dashboard"</script>
+							<script>window.location="/dashboard"</script>
 						<?php endif; ?>
 						<?php if($message = Session::get('error')): ?>
 							<div class="alert alert-danger alert-block">
@@ -40,34 +40,34 @@
 						<?php echo e(csrf_field()); ?>
 
                             <div class="form-group">
-                                <label class="form-label">Username</label>
+                                <label class="form-label">Correo Electrónico</label>
                                 <input id="validation-email"
                                        class="form-control"
-                                       placeholder="Email or Username"
+                                       placeholder="Correo Electrónico"
                                        name="email"
                                        type="text"
                                        data-validation="[NOTEMPTY]">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Password</label>
+                                <label class="form-label">Contraseña</label>
                                 <input id="validation-password"
                                        class="form-control password"
                                        name="password"
                                        type="password" data-validation="[L>=6]"
                                        data-validation-message="$ must be at least 6 characters"
-                                       placeholder="Password">
+                                       placeholder="Contraseña">
                             </div>
                             <div class="form-group">
-                                <a href="<?php echo e(url('/password/lost')); ?>" class="pull-right cat__core__link--blue cat__core__link--underlined">Forgot Password?</a>
+                                <a href="<?php echo e(url('/password/lost')); ?>" class="pull-right cat__core__link--blue cat__core__link--underlined">¿Olvidaste la contraseña?</a>
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox"  checked>
-                                        Remember me
+                                        Recordarme
                                     </label>
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button type="submit" class="btn btn-primary mr-3" name="login" value="login">Sign In</button>
+                                <button type="submit" class="btn btn-primary mr-3" name="login" value="login">Iniciar Sesión</button>
                             </div>
                         </form>
                     </div>
@@ -110,7 +110,7 @@
         });
 
         // Change BG
-        var min = 1, max = 5,
+        var min = 1, max = 3,
             next = Math.floor(Math.random()*max) + min,
             final = next > max ? min : next;
         $('.random-bg-image').data('img', final);

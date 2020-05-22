@@ -102,10 +102,9 @@
 
     </section>
 
-    <script>
-        $(document).ready(function() {
-            $('.summernote').summernote();
-        });
-    </script>
+    <!-- JS -->
+    <script src="<?php echo asset('/js/datatable.js'); ?>"></script>
+    <script src="<?php echo asset('/js/textarea.js'); ?>"></script>
+    <script src="<?php echo asset('/js/select.js'); ?>"></script>
 
     <?php echo $__env->make('components/footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

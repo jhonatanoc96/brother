@@ -111,13 +111,14 @@
                                                     <?php echo Form::close(); ?>
 
 
-                                                    <?php echo Form::open(['class' => 'deleteDebtTemp', 'method' => 'DELETE','action' => ['DebttempController@destroy', $debt_temp->id],'style'=>'display:inline','role'=>'form','onsubmit' => 'return confirm("Do you want to delete this ?")']); ?>
-
-                                                    <?php echo Form::submit('Remove', ['class' => 'submitDelete btn btn-danger',
-                                                    'data-id' => $debt_temp->id ]); ?>
-
-                                                    <?php echo Form::close(); ?>
-
+                                                    <!-- <?php echo Form::open(['class' => 'deleteDebtTemp', 'method' => 'DELETE','action' => ['DebtController@destroyDebtTemp', $debt_temp->id],'style'=>'display:inline','role'=>'form','onsubmit' => 'return confirm("Do you want to delete this ?")']); ?> -->
+                                                    <form id="deleteDebt<?php echo e($debt_temp->id); ?>" action="<?php echo e(route('eliminar_registro',[$debt_temp->id])); ?>" class="deleteDebtTemp" method="POST" style="display:inline">
+                                                        <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+                                                        <!-- <?php echo Form::submit('Remove', ['class' => 'submitDelete btn btn-danger',
+                                                        'data-id' => $debt_temp->id ]); ?> -->
+                                                        <button type="submit" class="submitDelete btn btn-danger" data-id="<?php echo e($debt_temp->id); ?>" data-token="<?php echo e(csrf_token()); ?>">Confirm</button>
+                                                        <!-- <?php echo Form::close(); ?> -->
+                                                    </form>
                                                 </td>
                                             </tr>
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -213,9 +214,6 @@
             </div>
             <?php endif; ?>
 
-
-
-
             <table class="table table-hover nowrap" id="example1" width="100%">
                 <thead class="thead-default">
                     <tr>
@@ -267,11 +265,6 @@
                 </tbody>
             </table>
 
-
-
-
-
-
         </div>
 
     </section>
@@ -279,6 +272,34 @@
     <!-- JS -->
     <script src="<?php echo asset('/js/datatable.js'); ?>"></script>
     <script src="<?php echo asset('/js/select.js'); ?>"></script>
+
+    <!-- Script para eliminar registros de la tabla de debts_temp -->
+    <script>
+        $(document).ready(function() {
+            $('.submitDelete').on('click', function(e) {
+                e.preventDefault();
+                var dataId = $('.submitDelete').attr('data-id');
+
+                $.ajax({
+                    url: "<?php echo e(url('eliminar_registro' )); ?>" + '/' + dataId,
+                    type: 'POST',
+                    data: $('#deleteDebt' + dataId).serialize(),
+
+                    success: function(msg) {
+                        $("#debtsTable").load(location.href + " #debtsTable");
+                    },
+
+                    error: function(data) {
+                        if (data.status === 422) {
+                            alert('error');
+                            toastr.error('Cannot delete the debt');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
 
     <!-- Ajax para ingresar registros en la tabla de debts_temp -->
     <script>
@@ -310,31 +331,5 @@
         });
     </script>
 
-    <!-- Script para eliminar registros de la tabla de debts_temp -->
-    <script>
-        $(document).ready(function() {
-            $('.submitDelete').on('click', function(e) {
-                e.preventDefault();
-                var dataId = $('.submitDelete').attr('data-id');
-
-                $.ajax({
-                    url: "<?php echo e(url('eliminar_registro' )); ?>" + '/' + dataId,
-                    type: 'DELETE',
-                    data: $('.deleteDebtTemp').serialize(),
-
-                    success: function(msg) {
-                        $("#debtsTable").load(location.href + " #debtsTable");
-                    },
-
-                    error: function(data) {
-                        if (data.status === 422) {
-                            alert('error');
-                            toastr.error('Cannot delete the debt');
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 
     <?php echo $__env->make('components/footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

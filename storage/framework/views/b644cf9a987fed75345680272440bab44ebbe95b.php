@@ -1,6 +1,5 @@
-
-@section('title', 'Login')
-@include('main')
+<?php $__env->startSection('title', 'Forgot Password'); ?>
+<?php echo $__env->make('main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <body class="cat__pages__login">
 <!-- START: pages/login -->
 <div class="cat__pages__login cat__pages__login--fullscreen" style="background-image: url(dist/modules/pages/common/img/login/1.jpg)">
@@ -8,65 +7,32 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="cat__pages__login__block__promo text-white text-center">
-                    <h2 class="mb-">
-                        <strong>BIENVENIDO - BROTHER</strong>
-                    </h2>
+                    <h1 class="mb-3"></h1>
                 </div>
                 <div class="cat__pages__login__block__inner">
                     <div class="cat__pages__login__block__form">
                         <h4 class="text-uppercase">
-                            <strong>INICIAR SESIÓN</strong>
+                            <strong>Forgot Password</strong>
                         </h4>
                         <br />
-						@if(isset(Auth::user()->email))
-							<script>window.location="/dashboard"</script>
-						@endif
-						@if($message = Session::get('error'))
-							<div class="alert alert-danger alert-block">
-								<button type="button" class="close" data-dismiss="alert">x</button>
-								<strong>{{ $message }}</strong>
-							</div>	
-						@endif		
-						@if (count($errors)>0)
-							<div class="alert alert-danger">
-								<ul>
-									@foreach($errors->all() as $error)
-										<li>{{ $error }}</li>
-									@endforeach	
-								</ul>
-							</div>
-						@endif	
-                        <form id="form-validation" name="form-validation" method="POST" action="{{ route('login') }}">
-						{{ csrf_field() }}
+                        <form id="form-validation" name="form-validation" method="POST">
                             <div class="form-group">
-                                <label class="form-label">Correo Electrónico</label>
+                                <label class="form-label">Username</label>
                                 <input id="validation-email"
                                        class="form-control"
-                                       placeholder="Correo Electrónico"
-                                       name="email"
+                                       placeholder="Email or Username"
+                                       name="validation[username]"
                                        type="text"
                                        data-validation="[NOTEMPTY]">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Contraseña</label>
-                                <input id="validation-password"
-                                       class="form-control password"
-                                       name="password"
-                                       type="password" data-validation="[L>=6]"
-                                       data-validation-message="$ must be at least 6 characters"
-                                       placeholder="Contraseña">
-                            </div>
-                            <div class="form-group">
-                                <a href="{{ url('/password/lost') }}" class="pull-right cat__core__link--blue cat__core__link--underlined">¿Olvidaste la contraseña?</a>
+                                <a href="<?php echo e(url('/login')); ?>" class="pull-right cat__core__link--blue cat__core__link--underlined">Login</a>
                                 <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox"  checked>
-                                        Recordarme
-                                    </label>
+                                    <p>&nbsp;</p>
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button type="submit" class="btn btn-primary mr-3" name="login" value="login">Iniciar Sesión</button>
+                                <button type="submit" class="btn btn-primary mr-3">Sign In</button>
                             </div>
                         </form>
                     </div>
@@ -113,10 +79,9 @@
             next = Math.floor(Math.random()*max) + min,
             final = next > max ? min : next;
         $('.random-bg-image').data('img', final);
-        $('.cat__pages__login').data('img', final).css('backgroundImage', 'url(dist/modules/pages/common/img/login/' + final + '.jpg)');
+        $('.cat__pages__login').data('img', final).css('backgroundImage', 'url(/dist/modules/pages/common/img/login/' + final + '.jpg)');
     
     });
 </script>
 <!-- END: page scripts -->
 </body>
-
