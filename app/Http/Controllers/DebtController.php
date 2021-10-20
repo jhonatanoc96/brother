@@ -112,7 +112,6 @@ class DebtController extends Controller
     public function edit($id)
     {
         $income = Income::find($id);
-        //$customers = Customer::all();
         $customers = Customer::all();
 
         return view('income.edit', compact('income', 'customers'));
@@ -169,7 +168,6 @@ class DebtController extends Controller
 
     public function listIncomes(Request $request)
     {
-        // dd($request->income);
         $debts = DB::table('debts')->where('income_id', $request->income)->get();
         $incomes = Income::all();
         $debts_temp = DB::table('debts_temp')->get();
@@ -225,9 +223,6 @@ class DebtController extends Controller
         // Recibir variable de sesión desde ConsultarIncome
         $incomeSelected = \Session::get('incomeSelected');
         $request['income_id'] = $incomeSelected[0]->id;
-
-        // dd($debts_temp);
-        // die();
 
         foreach ($debts_temp as $temp) {
             if ($request['active']) {
